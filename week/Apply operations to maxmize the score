@@ -1,0 +1,51 @@
+class Solution:
+    def maximumScore(self, nums: list[int], k: int) -> int:
+        MOD = 10**9 + 7
+        n = len(nums)
+        
+        max_num = max(nums)
+        prime_factors = [0] * (max_num + 1)
+        
+        for i in range(2, max_num + 1):
+            if prime_factors[i] == 0: 
+                for j in range(i, max_num + 1, i):
+                    prime_factors[j] += 1
+                    
+        scores = [prime_factors[x] for x in nums]
+        
+        left = [-1] * n
+        stack = []
+        for i in range(n):
+            while stack and scores[stack[-1]] < scores[i]:
+                stack.pop()
+            if stack:
+                left[i] = stack[-1]
+            stack.append(i)
+            
+        right = [n] * n
+        stack = []
+        for i in range(n - 1, -1, -1):
+            while stack and scores[stack[-1]] <= scores[i]:
+                stack.pop()
+            if stack:
+                right[i] = stack[-1]
+            stack.append(i)
+            
+        elements = []
+        for i in range(n):
+            total_subarrays = (i - left[i]) * (right[i] - i)
+            elements.append((nums[i], total_subarrays))
+
+        elements.sort(key=lambda x: x[0], reverse=True)
+        
+        final_score = 1
+        for val, max_copies in elements:
+            if k <= 0:
+                break
+            
+            copies_to_take = min(k, max_copies)
+            k -= copies_to_take
+
+            final_score = (final_score * pow(val, copies_to_take, MOD)) % MOD
+            
+        return final_score
