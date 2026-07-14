@@ -1,0 +1,17 @@
+class Solution:
+    def putMarbles(self, weights: list[int], k: int) -> int:
+        pair_sums = []
+        
+        for i in range(len(weights) - 1):
+            pair_sums.append(weights[i] + weights[i + 1])
+            
+        pair_sums.sort()
+
+        num_cuts = k - 1
+        
+        if num_cuts == 0:
+            return 0
+        min_score = sum(pair_sums[:num_cuts])
+        max_score = sum(pair_sums[-num_cuts:])
+        
+        return max_score - min_score
