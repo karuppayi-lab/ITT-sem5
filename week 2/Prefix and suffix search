@@ -1,0 +1,32 @@
+class TrieNode:
+    def __init__(self):
+        
+        self.children = {}
+        self.weight = -1
+
+class WordFilter:
+    def __init__(self, words: list[str]):
+        self.root = TrieNode()
+        
+        for index, word in enumerate(words):
+            word_len = len(word)
+            for i in range(word_len + 1):
+                combination = word[i:] + '#' + word
+                
+                current = self.root
+                current.weight = index 
+                for char in combination:
+                    if char not in current.children:
+                        current.children[char] = TrieNode()
+                    current = current.children[char]
+                    current.weight = index 
+    def f(self, pref: str, suff: str) -> int:
+        current = self.root
+        
+        query = suff + '#' + pref
+        for char in query:
+            if char not in current.children:
+                return -1 
+            current = current.children[char]
+            
+        return current.weight
