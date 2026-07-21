@@ -1,0 +1,8 @@
+from collections import Counter
+
+class Solution:
+    def frequencySort(self, s: str) -> str:
+        char_counts = Counter(s)
+        sorted_chars = char_counts.most_common()
+        result = [char * count for char, count in sorted_chars]
+        return "".join(result)
