@@ -1,0 +1,21 @@
+class Solution:
+    def uniqueLetterString(self, s: str) -> int:
+        index_map = {chr(c): [-1] for c in range(65, 91)} 
+        
+        for idx, char in enumerate(s):
+            index_map[char].append(idx)
+            
+        total_sum = 0
+        n = len(s)
+        
+        for char, indices in index_map.items():
+   
+            indices.append(n)
+
+            for i in range(1, len(indices) - 1):
+                prev = indices[i - 1]
+                curr = indices[i]
+                next_occ = indices[i + 1]
+                total_sum += (curr - prev) * (next_occ - curr)
+                
+        return total_sum
