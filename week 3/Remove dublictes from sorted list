@@ -1,0 +1,29 @@
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+class Solution:
+    def deleteDuplicates(self, head: ListNode) -> ListNode:
+        # Create a dummy node pointing to the head
+        dummy = ListNode(0)
+        dummy.next = head
+        
+        # 'pred' tracks the last node before the duplicate sublist
+        pred = dummy
+        
+        while head:
+            # If it's a start of duplicates sublist, skip all duplicates
+            if head.next and head.val == head.next.val:
+                while head.next and head.val == head.next.val:
+                    head = head.next
+                # Link pred to the node after the duplicates
+                pred.next = head.next
+            else:
+                # Move pred forward if no duplicate was found
+                pred = pred.next
+                
+            # Move head forward
+            head = head.next
+            
+        return dummy.next
