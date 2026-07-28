@@ -1,0 +1,32 @@
+class Solution:
+    def circularArrayLoop(self, nums: list[int]) -> bool:
+        n = len(nums)
+        visited = [0] * n
+        
+        def get_next(curr: int) -> int:
+            return (curr + nums[curr]) % n
+
+        def dfs(curr: int, is_forward: bool) -> bool:
+            if (nums[curr] > 0) != is_forward:
+                return False
+            if visited[curr] == 1:
+                if curr == get_next(curr):
+                    return False
+                return True
+            if visited[curr] == 2:
+                return False
+            visited[curr] = 1
+            
+            next_node = get_next(curr)
+            if dfs(next_node, is_forward):
+                return True
+            visited[curr] = 2
+            return False
+
+        for i in range(n):
+            if visited[i] == 0:
+                is_forward = nums[i] > 0
+                if dfs(i, is_forward):
+                    return True
+                    
+        return False
