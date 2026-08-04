@@ -1,0 +1,41 @@
+class Solution:
+    def maxDifference(self, s: str, k: int) -> int:
+        chars = ['0', '1', '2', '3', '4']
+        ans = -float('inf')
+        n = len(s)
+        for a in chars:
+            for b in chars:
+                if a == b:
+                    continue
+                
+                pa = [0] * (n + 1)
+                pb = [0] * (n + 1)
+                for i, ch in enumerate(s):
+                    pa[i + 1] = pa[i] + (1 if ch == a else 0)
+                    pb[i + 1] = pb[i] + (1 if ch == b else 0)
+                min_val = [[float('inf')] * 2 for _ in range(2)]
+                
+                last_b = 0
+                all_i = 0
+                
+                for j in range(1, n + 1):
+                    if s[j - 1] == b:
+                        last_b = j
+                    limit = min(j - k, last_b - 1)
+                    while all_i <= limit:
+                        pA = pa[all_i] % 2
+                        pB = pb[all_i] % 2
+                        val = pa[all_i] - pb[all_i]
+                        if val < min_val[pA][pB]:
+                            min_val[pA][pB] = val
+                        all_i += 1
+                    pA_j = pa[j] % 2
+                    pB_j = pb[j] % 2
+                    target_pA = 1 - pA_j
+                    target_pB = pB_j
+                    
+                    if min_val[target_pA][target_pB] != float('inf'):
+                        current_diff = (pa[j] - pb[j]) - min_val[target_pA][target_pB]
+                        ans = max(ans, current_diff)
+                        
+        return ans if ans != -float('inf') else -1
