@@ -1,0 +1,22 @@
+from collections import Counter
+class Solution:
+    def maxFrequency(self, nums: List[int], k: int, numOperations: int) -> int:
+        nums.sort()
+        exact_counts = Counter(nums)
+        candidates = set()
+        for num in exact_counts:
+            candidates.add(num)
+            candidates.add(num - k)
+            candidates.add(num + k)
+        ans = 0
+        for v in candidates:
+            low_bound = v - k
+            high_bound = v + k
+            left_idx = bisect.bisect_left(nums, low_bound)
+            right_idx = bisect.bisect_right(nums, high_bound)
+            total_in_window = right_idx - left_idx
+            exact_matches = exact_counts[v]
+            possible_operations = total_in_window - exact_matches
+            current_freq = exact_matches + min(numOperations, possible_operations)
+            ans = max(ans, current_freq)
+        return ans
