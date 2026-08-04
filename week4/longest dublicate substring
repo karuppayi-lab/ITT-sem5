@@ -1,0 +1,20 @@
+class Solution:
+    def longestDupSubstring(self, s: str) -> str:
+        n = len(s)
+        suffixes = list(range(n))
+        suffixes.sort(key=lambda i: s[i:])
+        
+        max_len = 0
+        start_idx = 0
+        for i in range(n - 1):
+            idx1 = suffixes[i]
+            idx2 = suffixes[i + 1]
+            match_len = 0
+            limit = min(n - idx1, n - idx2)
+            
+            while match_len < limit and s[idx1 + match_len] == s[idx2 + match_len]:
+                match_len += 1
+            if match_len > max_len:
+                max_len = match_len
+                start_idx = idx1
+        return s[start_idx:start_idx + max_len] if max_len > 0 else ""
