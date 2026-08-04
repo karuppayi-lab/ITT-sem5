@@ -1,0 +1,16 @@
+class Solution:
+    def longestValidSubstring(self, word: str, forbidden: List[str]) -> int:
+        forbidden_set = set(forbidden)
+        
+        max_length = 0
+        left = 0
+        n = len(word)
+        for right in range(n):
+            for i in range(right, max(left - 1, right - 10), -1):
+                suffix = word[i:right + 1]
+                if suffix in forbidden_set:
+                    left = i + 1
+                    break
+            max_length = max(max_length, right - left + 1)
+            
+        return max_length
