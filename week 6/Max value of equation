@@ -1,0 +1,36 @@
+import java.util.ArrayDeque;
+import java.util.Deque;
+
+class Solution {
+    public int findMaxValueOfEquation(int[][] points, int k) {
+        // Deque stores arrays of size 2: {y_i - x_i, x_i}
+        Deque<int[]> dq = new ArrayDeque<>();
+        int maxVal = Integer.MIN_VALUE;
+
+        for (int[] point : points) {
+            int x = point[0];
+            int y = point[1];
+
+            // Step 1: Remove points outside the valid x-coordinate window (x_j - x_i > k)
+            while (!dq.isEmpty() && x - dq.peekFirst()[1] > k) {
+                dq.pollFirst();
+            }
+
+            // Step 2: Calculate maximum equation value if a valid pair exists
+            if (!dq.isEmpty()) {
+                maxVal = Math.max(maxVal, (y + x) + dq.peekFirst()[0]);
+            }
+
+            // Step 3: Maintain decreasing order of (y_i - x_i) in the deque
+            int currentDiff = y - x;
+            while (!dq.isEmpty() && dq.peekLast()[0] <= currentDiff) {
+                dq.pollLast();
+            }
+
+            // Add the current point configuration to the back of the queue
+            dq.offerLast(new int[]{currentDiff, x});
+        }
+
+        return maxVal;
+    }
+}
