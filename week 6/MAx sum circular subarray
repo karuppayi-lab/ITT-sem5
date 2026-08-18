@@ -1,0 +1,28 @@
+class Solution:
+    def maxSubarraySumCircular(self, nums: list[int]) -> int:
+        total_sum = 0
+        
+        # Variables for Kadane's (Maximum Subarray)
+        curr_max = 0
+        max_sum = nums[0]
+        
+        # Variables for Inverse Kadane's (Minimum Subarray)
+        curr_min = 0
+        min_sum = nums[0]
+        
+        for num in nums:
+            total_sum += num
+            
+            # Standard Kadane's to find maximum contiguous sum
+            curr_max = max(num, curr_max + num)
+            max_sum = max(max_sum, curr_max)
+            
+            # Modified Kadane's to find minimum contiguous sum
+            curr_min = min(num, curr_min + num)
+            min_sum = min(min_sum, curr_min)
+            
+        # If all elements are negative, max_sum will hold the least negative value.
+        if max_sum < 0:
+            return max_sum
+            
+        return max(max_sum, total_sum - min_sum)
